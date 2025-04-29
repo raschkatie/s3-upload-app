@@ -25,7 +25,7 @@ const s3Client = new S3Client({
     region: 'us-east-2'
 });
 
-const PORT = 3000;
+const PORT = 80;
 
 app.get('/images', async (req, res) => {
     try {
