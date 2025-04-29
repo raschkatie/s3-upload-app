@@ -22,9 +22,7 @@ if (!fs.existsSync(UPLOAD_TEMP_PATH)) {
 
 // set up S3 Client (using LocalStack)
 const s3Client = new S3Client({
-    region: 'us-east-1',
-    endpoint: 'http://localhost:4566',
-    forcePathStyle: true
+    region: 'us-east-2'
 });
 
 const PORT = 3000;
