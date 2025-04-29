@@ -30,7 +30,7 @@ const PORT = 80;
 app.get('/images', async (req, res) => {
     try {
         const listObjectsParams = {
-            Bucket: 'my-cool-local-bucket'
+            Bucket: 'exercise-2-4-upload-bucket'
         };
 
         const command = new ListObjectsV2Command(listObjectsParams);
@@ -64,7 +64,7 @@ app.post('/images', async (req, res) => {
 
         // upload to S3
         const uploadParams = {
-            Bucket: 'my-cool-local-bucket',
+            Bucket: 'exercise-2-4-upload-bucket',
             Key: fileName,
             Body: fileContent
         };
