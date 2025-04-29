@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>S3 Upload App</title>
+</head>
+<body>
+    
+    <div id="message" class="hide"></div>
+
+    <h1>Upload a File</h1>
+
+    <form method="POST" enctype="multipart/form-data" action="/images">
+        <input type="file" name="image" required>
+        <div>
+            <button type="submit">Upload</button>
+            <button type="button" id="listFilesButton">List Uploaded Files</button>
+        </div>
+    </form>
+
+    <div id="filesList"></div>
+
+    <script>
+        document.getElementById('listFilesButton').addEventListener('click', () => {
+            fetch('/images')
+                .then(response => response.json())
+                .then(files => {
+                    const filesListDiv = document.getElementById('filesList');
+                    filesListDiv.innerHTML = ''; // clears old list
+
+                    const ul = document.createElement('ul');
+
+                    files.forEach(file => {
+                        const li = document.createElement('li');
+                        li.textContent = file + ' ';
+
+                        const downloadButton = document.createElement('button');
+                        downloadButton.textContent = 'Download';
+
+                        downloadButton.addEventListener('click', () => {
+                            window.location.href = `/images/${file}`;
+                        });
+
+                        li.appendChild(downloadButton);
+                        ul.appendChild(li);
+                    });
+
+                    filesListDiv.appendChild(ul);
+                })
+                .catch(error => {
+                    console.error('Error fetching files: ', error);
+                });
+        });
+
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            fetch('/images', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = 'File uploaded successfully!';
+                messageDiv.classList.remove('hide');
+                messageDiv.classList.add('show');
+
+                setTimeout(() => {
+                    messageDiv.classList.remove('show');
+                    messageDiv.classList.add('hide');
+                    messageDiv.textContent = '';
+                }, 3000);
+
+                e.target.reset();
+            })
+            .catch(error => {
+                console.error('Error uploading file: ', error);
+                alert('Failed to upload file.');
+            });
+        });
+    </script>
+
+</body>
+</html>
