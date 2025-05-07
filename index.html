@@ -90,5 +90,34 @@
         });
     </script>
 
+    <h2>Image Gallery (from resized-images/)</h2>
+    <div id="gallery" style="display: flex; flex-wrap: wrap;"></div>
+
+    <script>
+        async function loadGallery() {
+            try {
+            const res = await fetch('/images');
+            const imageUrls = await res.json();
+
+            const galleryDiv = document.getElementById('gallery');
+            galleryDiv.innerHTML = '';
+
+            imageUrls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.maxWidth = '200px';
+                img.style.margin = '10px';
+                img.alt = 'Resized Image';
+                galleryDiv.appendChild(img);
+            });
+            } catch (err) {
+            console.error('Error loading gallery: ', err);
+            }
+        }
+
+        loadGallery();
+    </script>
+
+
 </body>
 </html>

@@ -30,21 +30,27 @@ const PORT = 80;
 app.get('/images', async (req, res) => {
     try {
         const listObjectsParams = {
-            Bucket: 'exercise-2-4-upload-bucket'
+            Bucket: 'exercise-2-5-lambda',
+            Prefix: 'resized-images/'
         };
 
         const command = new ListObjectsV2Command(listObjectsParams);
         const data = await s3Client.send(command);
 
-        // check if there are any contents
-        const files = data.Contents ? data.Contents.map(obj => obj.Key) : [];
+        const files = data.Contents
+            ? data.Contents.map(obj => {
+                const key = obj.Key;
+                return `https://${listObjectsParams.Bucket}.s3.us-east-2.amazonaws.com/${key}`;
+            })
+            : [];
 
         res.send(files);
-    } catch(err) {
+    } catch (err) {
         console.error('Error listing objects: ', err);
         res.status(500).send('Error listing images');
     }
 });
+
 
 app.post('/images', async (req, res) => {
     if (!req.files || !req.files.image) {
@@ -64,8 +70,8 @@ app.post('/images', async (req, res) => {
 
         // upload to S3
         const uploadParams = {
-            Bucket: 'exercise-2-4-upload-bucket',
-            Key: fileName,
+            Bucket: 'exercise-2-5-lambda',
+            Key: `original-images/${fileName}`,
             Body: fileContent
         };
 
@@ -97,6 +103,6 @@ app.get('/images/:filename', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, 0.0.0.0, () => {
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
