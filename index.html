@@ -45,7 +45,12 @@
                         downloadButton.textContent = 'Download';
 
                         downloadButton.addEventListener('click', () => {
-                            window.location.href = file;
+                            const link = document.createElement('a');
+                            link.href = file;
+                            link.download = file.split('/').pop();
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
                         });
 
                         li.appendChild(downloadButton);
