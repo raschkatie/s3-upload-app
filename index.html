@@ -24,11 +24,16 @@
 
     <script>
         document.getElementById('listFilesButton').addEventListener('click', () => {
+            const filesListDiv = document.getElementById('filesList');
+            const galleryDiv = document.getElementById('gallery');
+
+            filesListDiv.innerHTML = '<p>Loading files...</p>';
+            galleryDiv.innerHTML = '<p>Loading gallery...</p>';
+
             fetch('/images')
                 .then(response => response.json())
                 .then(files => {
-                    const filesListDiv = document.getElementById('filesList');
-                    filesListDiv.innerHTML = ''; // clears old list
+                    filesListDiv.innerHTML = '';
 
                     const ul = document.createElement('ul');
 
@@ -52,8 +57,10 @@
                 })
                 .catch(error => {
                     console.error('Error fetching files: ', error);
+                    filesListDiv.innerHTML = '<p>Error loading files.</p>';
                 });
         });
+
 
         document.querySelector('form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -97,24 +104,33 @@
     <script>
         async function loadGallery() {
             try {
-            const res = await fetch('/images');
-            const imageUrls = await res.json();
+                const res = await fetch('/images');
+                const imageUrls = await res.json();
 
-            const galleryDiv = document.getElementById('gallery');
-            galleryDiv.innerHTML = '';
+                const galleryDiv = document.getElementById('gallery');
+                galleryDiv.innerHTML = '';
 
-            imageUrls.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.maxWidth = '200px';
-                img.style.margin = '10px';
-                img.alt = 'Resized Image';
-                galleryDiv.appendChild(img);
-            });
+                if (imageUrls.length === 0) {
+                    const message = document.createElement('p');
+                    message.textContent = 'No files uploaded.';
+                    message.style.fontStyle = 'italic';
+                    galleryDiv.appendChild(message);
+                    return;
+                }
+
+                imageUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.maxWidth = '140px';
+                    img.style.margin = '10px';
+                    img.alt = 'Resized Image';
+                    galleryDiv.appendChild(img);
+                });
             } catch (err) {
-            console.error('Error loading gallery: ', err);
+                console.error('Error loading gallery: ', err);
             }
         }
+
 
         loadGallery();
     </script>
