@@ -38,11 +38,14 @@ app.get('/images', async (req, res) => {
         const data = await s3Client.send(command);
 
         const files = data.Contents
-            ? data.Contents.map(obj => {
-                const key = obj.Key;
-                return `https://${listObjectsParams.Bucket}.s3.us-east-2.amazonaws.com/${key}`;
+        ? data.Contents
+            .filter(obj => obj.Key !== 'resized-images/')
+            .map(obj => {
+              const key = obj.Key;
+              return `https://${listObjectsParams.Bucket}.s3.us-east-2.amazonaws.com/${key}`;
             })
-            : [];
+        : [];
+      
 
         res.send(files);
     } catch (err) {
