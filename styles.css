@@ -43,25 +43,6 @@ button:hover {
     background-color: #555;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-li {
-    background-color: #fff;
-    margin: 10px auto;
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 40%;
-    width: 20%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 #message {
     position: fixed;
     top: 20px;

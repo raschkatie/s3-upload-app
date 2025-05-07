@@ -16,57 +16,10 @@
         <input type="file" name="image" required>
         <div>
             <button type="submit">Upload</button>
-            <button type="button" id="listFilesButton">List Uploaded Files</button>
         </div>
     </form>
 
-    <div id="filesList"></div>
-
     <script>
-        document.getElementById('listFilesButton').addEventListener('click', () => {
-            const filesListDiv = document.getElementById('filesList');
-            const galleryDiv = document.getElementById('gallery');
-
-            filesListDiv.innerHTML = '<p>Loading files...</p>';
-            galleryDiv.innerHTML = '<p>Loading gallery...</p>';
-
-            fetch('/images')
-                .then(response => response.json())
-                .then(files => {
-                    filesListDiv.innerHTML = '';
-
-                    const ul = document.createElement('ul');
-
-                    files.forEach(file => {
-                        const li = document.createElement('li');
-                        li.textContent = file + ' ';
-
-                        const downloadButton = document.createElement('button');
-                        downloadButton.textContent = 'Download';
-
-                        downloadButton.addEventListener('click', () => {
-                            const link = document.createElement('a');
-                            link.href = file;
-                            link.download = file.split('/').pop();
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        });
-
-                        li.appendChild(downloadButton);
-                        ul.appendChild(li);
-                    });
-
-                    filesListDiv.appendChild(ul);
-                    loadGallery();
-                })
-                .catch(error => {
-                    console.error('Error fetching files: ', error);
-                    filesListDiv.innerHTML = '<p>Error loading files.</p>';
-                });
-        });
-
-
         document.querySelector('form').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -95,6 +48,7 @@
                 }, 3000);
 
                 e.target.reset();
+                loadGallery();
             })
             .catch(error => {
                 console.error('Error uploading file: ', error);
@@ -103,7 +57,7 @@
         });
     </script>
 
-    <h2>Image Gallery</h2>
+    <h2>Uploaded Images</h2>
     <div id="gallery"></div>
 
     <script>
