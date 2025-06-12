@@ -100,7 +100,7 @@ app.get('/images/:filename', (req, res) => {
     const filePath = path.join(UPLOAD_TEMP_PATH, filename);
 
     if(fs.existsSync(filePath)) {
-        res.download(filePath); // tells browser to download the response
+        res.download(filePath);
     } else {
         res.status(404).send('File not found');
     }
